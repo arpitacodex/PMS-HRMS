@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+:root {
+  --background:     #f0f2f5;        /* soft grey page bg — cards float above it */
+  --foreground:     #111827;
+
+  --bg-primary:     #f0f2f5;        /* page bg, table header, section backgrounds */
+  --bg-secondary:   #ffffff;        /* cards, table body, filter bar — pure white */
+  --bg-navbar:      #ffffff;
+
+  --text-primary:   #111827;        /* strong readable dark text */
+  --text-secondary: #6b7280;        /* muted labels, descriptions */
+
+  --border-color:   #e2e8f0;        /* slightly more visible borders */
+  --input-bg:       #ffffff;        /* inputs match cards */
+  --table-hover:    #f5f7ff;        /* subtle blue tint on row hover */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html.dark {
+  --background:     #0f1117;
+  --foreground:     #f9fafb;
+  --bg-primary:     #0f1117;
+  --bg-secondary:   #1a1f2e;
+  --bg-navbar:      #1a1f2e;
+  --text-primary:   #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color:   #374151;
+  --input-bg:       #1f2937;
+  --table-hover:    #1f2937;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ══ DARK MODE OVERRIDES ══ */
+
+html.dark body > *,
+html.dark #__next,
+html.dark main,
+html.dark [class*="min-h-screen"] {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+html.dark [class*="bg-white"],
+html.dark [class*="bg-gray-50"],
+html.dark [class*="bg-gray-100"] {
+  background-color: var(--bg-secondary) !important;
+}
+
+html.dark header,
+html.dark nav {
+  background-color: var(--bg-navbar) !important;
+  border-color: var(--border-color) !important;
+}
+
+html.dark [class*="text-gray-900"],
+html.dark [class*="text-gray-800"],
+html.dark [class*="text-black"] { color: var(--text-primary) !important; }
+
+html.dark [class*="text-gray-600"],
+html.dark [class*="text-gray-500"],
+html.dark [class*="text-gray-400"] { color: var(--text-secondary) !important; }
+
+html.dark [class*="border-gray-200"],
+html.dark [class*="border-gray-100"] { border-color: var(--border-color) !important; }
+
+html.dark table  { background-color: var(--bg-secondary) !important; }
+html.dark thead  { background-color: var(--bg-secondary) !important; }
+html.dark tbody  { background-color: var(--bg-secondary) !important; }
+html.dark th, html.dark td {
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+  background-color: transparent !important;
+}
+html.dark tr:hover td { background-color: var(--table-hover) !important; }
+html.dark thead tr,
+html.dark [class*="bg-[#fafafa]"] { background-color: #1f2937 !important; }
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+html.dark input::placeholder { color: #6b7280 !important; }
+html.dark select option { background-color: var(--bg-secondary); color: var(--text-primary); }
+
+html.dark [class*="bg-gray-50\/70"] { background-color: #1f2937 !important; }
+html.dark .sticky.bottom-0 { background-color: var(--bg-secondary) !important; }
+
+html.dark ::-webkit-scrollbar       { width: 6px; }
+html.dark ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+html.dark ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+
+/* ══ LIGHT MODE SHADOW HELPERS ══ */
+/* Give white cards a subtle lift above the grey page background */
+[style*="--bg-secondary"] {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+/* Custom fixes */
+input::-ms-reveal, input::-ms-clear,
+input::-webkit-textfield-decoration-container { display: none !important; }
+
+@keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes scaleIn  { from { opacity:0; transform:scale(0.8); }       to { opacity:1; transform:scale(1); }   }
+@keyframes slideInFromBottom { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+
+.animate-fadeInUp         { animation: fadeInUp 0.6s ease-out both; }
+.animate-scaleIn          { animation: scaleIn  0.5s ease-out both; }
+.animate-slideInFromBottom{ animation: slideInFromBottom 0.7s ease-out both; }
+.animate-fadeIn           { animation: fadeIn   0.6s ease-out both; }
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+
+.footer-scroll-top {
+  position:fixed; bottom:5.5rem; right:2rem; padding:0.75rem;
+  background:linear-gradient(to right,#CE4200,#FF6E2A); color:white;
+  border-radius:9999px; z-index:50; border:none; cursor:pointer;
+  opacity:0; transform:translateY(4rem); pointer-events:none; transition:all 0.3s ease;
+  box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05);
+}
+.footer-scroll-top-visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+
+@keyframes slideInLeft  { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
+@keyframes slideInRight { from { opacity:0; transform:translateX(30px);  } to { opacity:1; transform:translateX(0); } }
+@keyframes slideUp      { from { opacity:0; transform:translateY(30px);  } to { opacity:1; transform:translateY(0); } }
+@keyframes slideDown    { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+
+.animate-slideInLeft  { animation: slideInLeft  0.6s ease-out both; }
+.animate-slideInRight { animation: slideInRight 0.6s ease-out both; }
+.animate-slideUp      { animation: slideUp      0.6s ease-out both; }
+.animate-slideDown    { animation: slideDown    0.5s ease-out both; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-600 { animation-delay: 0.6s; }
+
+@keyframes sidebarSlideIn { from { opacity:0; transform:translateX(-100%); } to { opacity:1; transform:translateX(0); } }
+@keyframes sidebarFadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes navItemStagger { from { opacity:0; transform:translateX(-20px); } to { opacity:1; transform:translateX(0); } }
+@keyframes profileSlideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toggleButtonPulse {
+  from { opacity:0; transform:translateX(-10px) translateY(-50%); }
+  to   { opacity:1; transform:translateX(0) translateY(-50%); }
+}
+
+aside { animation: sidebarSlideIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards; }
+.fixed.inset-0.bg-black\/50 { animation: sidebarFadeIn 0.3s ease-out; }
+nav > div { animation: navItemStagger 0.5s cubic-bezier(0.4,0,0.2,1) forwards; }
+aside > div > div:last-child { animation: profileSlideUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.3s both; }
+aside > div > button[class*="absolute"] { animation: toggleButtonPulse 0.5s cubic-bezier(0.4,0,0.2,1) 0.4s both; }
+
+.table-scroll::-webkit-scrollbar       { height:6px; }
+.table-scroll::-webkit-scrollbar-track { background:#F5F6FA; border-radius:99px; }
+.table-scroll::-webkit-scrollbar-thumb { background:#F97316; border-radius:99px; }
+.table-scroll::-webkit-scrollbar-thumb:hover { background:#EA6A05; }

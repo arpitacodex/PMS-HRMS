@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# next
+.next/
+
+# production
+out/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment
+.env
+.env.local
+
+# build
+dist/
+build/
+
+# vscode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
