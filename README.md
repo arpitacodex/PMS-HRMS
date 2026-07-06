@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PMS-HRMS
 
-## Getting Started
+A modern **Project Management System (PMS)** and **Human Resource Management System (HRMS)** built with **Next.js**, **React**, **Tailwind CSS**, and a RESTful backend.
 
-First, run the development server:
+---
+
+## 📌 Overview
+
+PMS-HRMS is a web-based management platform designed to simplify project management and human resource operations within an organization.
+
+The system enables administrators and HR teams to manage employees, clients, projects, attendance, leaves, and notifications through an intuitive dashboard.
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication
+
+- Secure Login
+- JWT Authentication
+- Role-Based Access
+- Protected Routes
+
+### 👥 Employee Management
+
+- Add Employee
+- Update Employee
+- Delete Employee
+- Employee Profiles
+
+### 🏢 Client Management
+
+- Add Clients
+- Update Client Details
+- Client Directory
+
+### 📁 Project Management
+
+- Create Projects
+- Assign Employees
+- Track Progress
+- Project Status
+
+### 📅 Attendance
+
+- Daily Attendance
+- Attendance Reports
+- Employee Status
+
+### 📝 Leave Management
+
+- Leave Applications
+- Approve / Reject Leave
+- Leave History
+
+### 🔔 Notifications
+
+- Notification Center
+- Alert Messages
+- Real-time Updates
+
+### 📊 Dashboard
+
+- Employee Statistics
+- Project Statistics
+- Client Statistics
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- Next.js
+- Tailwind CSS
+- Axios
+- SweetAlert2
+
+### Backend
+
+- Node.js
+- Express.js
+- MySQL
+- JWT Authentication
+
+---
+
+## 📂 Project Structure
+
+```text
+PMS-HRMS
+│
+├── app
+├── components
+├── lib
+├── public
+├── src
+├── package.json
+└── README.md
+```
+
+---
+
+## 🚀 Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/arpitacodex/PMS-HRMS.git
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run Project
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## ⭐ Support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you like this project, consider giving it a **Star ⭐** on GitHub.
