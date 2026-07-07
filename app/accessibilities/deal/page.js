@@ -354,11 +354,63 @@ export default function DealsPage() {
     }
   }
 
-  function showToast(icon, title, text) {
-    if (typeof window !== "undefined" && window.Swal) {
-      window.Swal.fire({ icon, title, text, timer: 2600, timerProgressBar: true, showConfirmButton: false });
-    }
-  }
+// ── Advanced Toast (branded, animated, pauses on hover) ──
+function showToast(icon, title, text) {
+  if (typeof window === "undefined" || !window.Swal) return;
+
+  const Toast = window.Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (el) => {
+      el.addEventListener("mouseenter", window.Swal.stopTimer);
+      el.addEventListener("mouseleave", window.Swal.resumeTimer);
+    },
+    customClass: {
+      popup: "rounded-xl shadow-lg border border-gray-100",
+    },
+  });
+
+  Toast.fire({
+    icon,
+    title,
+    text,
+    iconColor:
+      icon === "success" ? "#22C55E" :
+      icon === "error" ? "#EF4444" :
+      icon === "warning" ? "#F97316" : "#3B82F6",
+  });
+}
+
+// ── Advanced Confirm (custom buttons, icon color, animation) ──
+async function showConfirm(title, text, opts = {}) {
+  if (typeof window === "undefined" || !window.Swal) return window.confirm(`${title}\n${text}`);
+
+  const result = await window.Swal.fire({
+    title,
+    text,
+    icon: opts.icon ?? "warning",
+    iconColor: opts.danger ? "#EF4444" : "#F97316",
+    showCancelButton: true,
+    confirmButtonText: opts.confirmText ?? "Yes, proceed",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+    focusCancel: true,
+    buttonsStyling: false,
+    customClass: {
+      popup: "rounded-2xl px-2",
+      confirmButton: `px-5 py-2.5 rounded-xl text-white text-sm font-semibold mx-1.5 shadow-md transition-all ${
+        opts.danger ? "bg-red-500 hover:bg-red-600" : "bg-orange-500 hover:bg-orange-600"
+      }`,
+      cancelButton: "px-5 py-2.5 rounded-xl border border-gray-200 text-gray-500 text-sm font-semibold mx-1.5 bg-white hover:border-orange-400 hover:text-orange-500 transition-all",
+    },
+    showClass: { popup: "animate-modal-in" },
+  });
+
+  return result.isConfirmed;
+}
 
   async function showConfirm(title, text) {
     if (typeof window === "undefined" || !window.Swal) return window.confirm(`${title}\n${text}`);
