@@ -25,25 +25,25 @@ async function apiFetch(path, opts = {}) {
 
 // ── Color palettes — light bg / light text / dark bg / dark text ─────────────
 const MODULE_PALETTE = {
-  users:         { lb: "#ede9fe", lt: "#6d28d9", db: "rgba(109,40,217,0.25)", dt: "#c4b5fd" },
-  employees:     { lb: "#dbeafe", lt: "#1d4ed8", db: "rgba(29,78,216,0.25)",  dt: "#93c5fd" },
-  projects:      { lb: "#d1fae5", lt: "#065f46", db: "rgba(6,95,70,0.25)",    dt: "#6ee7b7" },
-  tasks:         { lb: "#cffafe", lt: "#0e7490", db: "rgba(14,116,163,0.25)", dt: "#67e8f9" },
-  leads:         { lb: "#ffedd5", lt: "#c2410c", db: "rgba(194,65,12,0.25)",  dt: "#fdba74" },
-  deals:         { lb: "#fef3c7", lt: "#92400e", db: "rgba(146,64,14,0.25)",  dt: "#fcd34d" },
-  clients:       { lb: "#ccfbf1", lt: "#0f766e", db: "rgba(15,118,110,0.25)", dt: "#5eead4" },
-  payroll:       { lb: "#fce7f3", lt: "#9d174d", db: "rgba(157,23,77,0.25)",  dt: "#f9a8d4" },
-  invoices:      { lb: "#e0e7ff", lt: "#3730a3", db: "rgba(55,48,163,0.25)",  dt: "#a5b4fc" },
-  leaves:        { lb: "#ecfccb", lt: "#3f6212", db: "rgba(63,98,18,0.25)",   dt: "#bef264" },
-  attendance:    { lb: "#e0f2fe", lt: "#0369a1", db: "rgba(3,105,161,0.25)",  dt: "#7dd3fc" },
-  assets:        { lb: "#ffe4e6", lt: "#9f1239", db: "rgba(159,18,57,0.25)",  dt: "#fda4af" },
-  system:        { lb: "#fee2e2", lt: "#991b1b", db: "rgba(153,27,27,0.25)",  dt: "#fca5a5" },
+  users: { lb: "#ede9fe", lt: "#6d28d9", db: "rgba(109,40,217,0.25)", dt: "#c4b5fd" },
+  employees: { lb: "#dbeafe", lt: "#1d4ed8", db: "rgba(29,78,216,0.25)", dt: "#93c5fd" },
+  projects: { lb: "#d1fae5", lt: "#065f46", db: "rgba(6,95,70,0.25)", dt: "#6ee7b7" },
+  tasks: { lb: "#cffafe", lt: "#0e7490", db: "rgba(14,116,163,0.25)", dt: "#67e8f9" },
+  leads: { lb: "#ffedd5", lt: "#c2410c", db: "rgba(194,65,12,0.25)", dt: "#fdba74" },
+  deals: { lb: "#fef3c7", lt: "#92400e", db: "rgba(146,64,14,0.25)", dt: "#fcd34d" },
+  clients: { lb: "#ccfbf1", lt: "#0f766e", db: "rgba(15,118,110,0.25)", dt: "#5eead4" },
+  payroll: { lb: "#fce7f3", lt: "#9d174d", db: "rgba(157,23,77,0.25)", dt: "#f9a8d4" },
+  invoices: { lb: "#e0e7ff", lt: "#3730a3", db: "rgba(55,48,163,0.25)", dt: "#a5b4fc" },
+  leaves: { lb: "#ecfccb", lt: "#3f6212", db: "rgba(63,98,18,0.25)", dt: "#bef264" },
+  attendance: { lb: "#e0f2fe", lt: "#0369a1", db: "rgba(3,105,161,0.25)", dt: "#7dd3fc" },
+  assets: { lb: "#ffe4e6", lt: "#9f1239", db: "rgba(159,18,57,0.25)", dt: "#fda4af" },
+  system: { lb: "#fee2e2", lt: "#991b1b", db: "rgba(153,27,27,0.25)", dt: "#fca5a5" },
   communication: { lb: "#fae8ff", lt: "#86198f", db: "rgba(134,25,143,0.25)", dt: "#e879f9" },
-  performance:   { lb: "#fef9c3", lt: "#854d0e", db: "rgba(133,77,14,0.25)",  dt: "#fde047" },
-  departments:   { lb: "#f0fdf4", lt: "#15803d", db: "rgba(21,128,61,0.25)",  dt: "#86efac" },
-  payments:      { lb: "#fff7ed", lt: "#c2410c", db: "rgba(194,65,12,0.25)",  dt: "#fdba74" },
-  roles:         { lb: "#ede9fe", lt: "#7c3aed", db: "rgba(124,58,237,0.25)", dt: "#c4b5fd" },
-  permissions:   { lb: "#fdf2f8", lt: "#a21caf", db: "rgba(162,28,175,0.25)", dt: "#e879f9" },
+  performance: { lb: "#fef9c3", lt: "#854d0e", db: "rgba(133,77,14,0.25)", dt: "#fde047" },
+  departments: { lb: "#f0fdf4", lt: "#15803d", db: "rgba(21,128,61,0.25)", dt: "#86efac" },
+  payments: { lb: "#fff7ed", lt: "#c2410c", db: "rgba(194,65,12,0.25)", dt: "#fdba74" },
+  roles: { lb: "#ede9fe", lt: "#7c3aed", db: "rgba(124,58,237,0.25)", dt: "#c4b5fd" },
+  permissions: { lb: "#fdf2f8", lt: "#a21caf", db: "rgba(162,28,175,0.25)", dt: "#e879f9" },
 };
 
 function getModuleColor(mod, isDark) {
@@ -57,11 +57,11 @@ function getModuleColor(mod, isDark) {
 
 // Role badge palette — light and dark
 const ROLE_PALETTE = {
-  admin:           { lb: "#fff7ed", lt: "#c2410c", db: "rgba(194,65,12,0.2)",  dt: "#fb923c" },
-  administrator:   { lb: "#fff7ed", lt: "#c2410c", db: "rgba(194,65,12,0.2)",  dt: "#fb923c" },
-  project_manager: { lb: "#eff6ff", lt: "#1d4ed8", db: "rgba(29,78,216,0.2)",  dt: "#60a5fa" },
-  hr_manager:      { lb: "#f0fdf4", lt: "#15803d", db: "rgba(21,128,61,0.2)",  dt: "#4ade80" },
-  employee:        { lb: "#f9fafb", lt: "#374151", db: "rgba(75,85,99,0.2)",   dt: "#9ca3af" },
+  admin: { lb: "#fff7ed", lt: "#c2410c", db: "rgba(194,65,12,0.2)", dt: "#fb923c" },
+  administrator: { lb: "#fff7ed", lt: "#c2410c", db: "rgba(194,65,12,0.2)", dt: "#fb923c" },
+  project_manager: { lb: "#eff6ff", lt: "#1d4ed8", db: "rgba(29,78,216,0.2)", dt: "#60a5fa" },
+  hr_manager: { lb: "#f0fdf4", lt: "#15803d", db: "rgba(21,128,61,0.2)", dt: "#4ade80" },
+  employee: { lb: "#f9fafb", lt: "#374151", db: "rgba(75,85,99,0.2)", dt: "#9ca3af" },
 };
 
 function getRoleBadgeStyle(roleName, isDark) {
@@ -77,11 +77,21 @@ function getStatusStyle(status, isDark) {
   if (status === "active") {
     return isDark
       ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(52,211,153,0.2)" }
-      : { background: "#ecfdf5",               color: "#065f46", border: "1px solid #a7f3d0" };
+      : { background: "#ecfdf5", color: "#065f46", border: "1px solid #a7f3d0" };
   }
   return isDark
     ? { background: "rgba(239,68,68,0.15)", color: "#f87171", border: "1px solid rgba(248,113,113,0.2)" }
-    : { background: "#fef2f2",              color: "#991b1b", border: "1px solid #fecaca" };
+    : { background: "#fef2f2", color: "#991b1b", border: "1px solid #fecaca" };
+}
+
+// Solid, isDark-driven text colors so they can never drift out of sync
+// with a background that's also chosen from the isDark prop.
+function textPrimary(isDark) {
+  return isDark ? "#FFFFFF" : "#111827"; // white / gray-900
+}
+
+function textSecondary(isDark) {
+  return isDark ? "#D1D5DB" : "#6B7280"; // gray-300 / gray-500
 }
 
 function Avatar({ name }) {
@@ -119,7 +129,7 @@ function ViewPermissionsModal({ user, rolesWithPermissions, isDark, onClose }) {
   const filteredGrouped = Object.entries(grouped).reduce((acc, [mod, perms]) => {
     if (activeModule !== "all" && mod !== activeModule) return acc;
     const filtered = perms.filter(p =>
-      p.name.toLowerCase().includes(searchPerm.toLowerCase()) ||
+      (p.name || "").toLowerCase().includes(searchPerm.toLowerCase()) ||
       (p.description || "").toLowerCase().includes(searchPerm.toLowerCase())
     );
     if (filtered.length) acc[mod] = filtered;
@@ -138,7 +148,7 @@ function ViewPermissionsModal({ user, rolesWithPermissions, isDark, onClose }) {
           <div className="flex items-center gap-3">
             <Avatar name={`${user.first_name} ${user.last_name}`} />
             <div>
-              <h2 className="font-semibold text-base" style={{ color: "var(--text-primary)" }}>
+              <h2 className="font-semibold text-base" style={{ color: textPrimary(isDark) }}>
                 {user.first_name} {user.last_name}
               </h2>
               <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
@@ -151,11 +161,11 @@ function ViewPermissionsModal({ user, rolesWithPermissions, isDark, onClose }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            <span className="text-sm" style={{ color: textSecondary(isDark) }}>
               <span className="font-semibold" style={{ color: "#f97316" }}>{uniquePerms.length}</span> permissions
             </span>
             <button onClick={onClose} className="p-1.5 rounded-lg transition-colors"
-              style={{ color: "var(--text-secondary)" }}
+              style={{ color: textSecondary(isDark) }}
               onMouseEnter={e => e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.08)" : "#f3f4f6"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,9 +218,26 @@ function ViewPermissionsModal({ user, rolesWithPermissions, isDark, onClose }) {
                           <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                         </svg>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium font-mono truncate" style={{ color: "var(--text-primary)" }}>{p.name}</p>
-                        <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>{p.description}</p>
+                      {/* <div className="min-w-0">
+                        <p className="text-xs font-medium font-mono truncate" style={{ color: textPrimary(isDark) }}>{p.name}</p>
+                        <p className="text-xs mt-0.5" style={{ color: textSecondary(isDark) }}>{p.description}</p>
+                      </div> */}
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="text-xs font-medium font-mono truncate"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {p.name}
+                        </p>
+
+                        {p.description && (
+                          <p
+                            className="text-xs mt-1"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {p.description}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -248,8 +275,8 @@ function PermissionModal({ user, allPermissions, initialSelectedIds, isDark, onC
   const filteredPerms = Object.entries(allPermissions).reduce((acc, [mod, perms]) => {
     if (activeModule !== "all" && mod !== activeModule) return acc;
     const filtered = perms.filter(p =>
-      p.name.toLowerCase().includes(searchPerm.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchPerm.toLowerCase())
+      (p.name || "").toLowerCase().includes(searchPerm.toLowerCase()) ||
+      (p.description || "").toLowerCase().includes(searchPerm.toLowerCase())
     );
     if (filtered.length) acc[mod] = filtered;
     return acc;
@@ -298,18 +325,18 @@ function PermissionModal({ user, allPermissions, initialSelectedIds, isDark, onC
           <div className="flex items-center gap-3">
             <Avatar name={`${user.first_name} ${user.last_name}`} />
             <div>
-              <h2 className="font-semibold text-base" style={{ color: "var(--text-primary)" }}>
+              <h2 className="font-semibold text-base" style={{ color: textPrimary(isDark) }}>
                 {user.first_name} {user.last_name}
               </h2>
-              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>{user.email}</p>
+              <p className="text-xs" style={{ color: textSecondary(isDark) }}>{user.email}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            <span className="text-sm" style={{ color: textSecondary(isDark) }}>
               <span className="font-semibold" style={{ color: "#f97316" }}>{selected.size}</span>/{totalPerms} selected
             </span>
             <button onClick={onClose} className="p-1.5 rounded-lg transition-colors"
-              style={{ color: "var(--text-secondary)" }}
+              style={{ color: textSecondary(isDark) }}
               onMouseEnter={e => e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.08)" : "#f3f4f6"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,14 +392,14 @@ function PermissionModal({ user, allPermissions, initialSelectedIds, isDark, onC
                   {perms.map(p => (
                     <label key={p.id} className="flex items-start gap-3 p-3 rounded-xl cursor-pointer transition-all"
                       style={selected.has(p.id)
-                        ? { border: "1px solid #fdba74", background: isDark ? "rgba(249,115,22,0.1)" : "#fff7ed" }
+                        ? { border: "1px solid #fdba74", background: isDark ? "rgba(249,115,22,0.18)" : "#fff7ed" }
                         : { border: "1px solid var(--border-color)", background: "var(--bg-primary)" }
                       }>
                       <input type="checkbox" checked={selected.has(p.id)} onChange={() => togglePerm(p.id)}
                         className="mt-0.5 h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-xs font-medium font-mono truncate" style={{ color: "var(--text-primary)" }}>{p.name}</p>
-                        <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>{p.description}</p>
+                        <p className="text-xs font-medium font-mono truncate" style={{ color: textPrimary(isDark) }}>{p.name}</p>
+                        <p className="text-xs mt-0.5" style={{ color: textSecondary(isDark) }}>{p.description}</p>
                       </div>
                     </label>
                   ))}
@@ -385,10 +412,15 @@ function PermissionModal({ user, allPermissions, initialSelectedIds, isDark, onC
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4"
           style={{ borderTop: "1px solid var(--border-color)", background: "var(--bg-primary)" }}>
-          <button onClick={onClose} className="px-4 py-2 text-sm rounded-lg transition-colors"
-            style={{ border: "1px solid var(--border-color)", color: "var(--text-primary)", background: "var(--bg-secondary)" }}
-            onMouseEnter={e => e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.05)" : "#f9fafb"}
-            onMouseLeave={e => e.currentTarget.style.background = "var(--bg-secondary)"}>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm rounded-lg"
+            style={{
+              border: "1px solid var(--border-color)",
+              color: "var(--text-primary)",
+              background: "var(--bg-secondary)",
+            }}
+          >
             Cancel
           </button>
           <button onClick={handleSave} disabled={saving}
@@ -593,10 +625,10 @@ export default function RolePermissionPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total Users",       value: users.length,                                    grad: "linear-gradient(135deg,#8b5cf6,#7c3aed)" },
-            { label: "Roles",             value: uniqueRoles.length,                              grad: "linear-gradient(135deg,#f97316,#ea580c)" },
-            { label: "Total Permissions", value: Object.values(allPermissions).flat().length,     grad: "linear-gradient(135deg,#10b981,#059669)" },
-            { label: "Active",            value: users.filter(u => u.status === "active").length, grad: "linear-gradient(135deg,#0ea5e9,#0284c7)" },
+            { label: "Total Users", value: users.length, grad: "linear-gradient(135deg,#8b5cf6,#7c3aed)" },
+            { label: "Roles", value: uniqueRoles.length, grad: "linear-gradient(135deg,#f97316,#ea580c)" },
+            { label: "Total Permissions", value: Object.values(allPermissions).flat().length, grad: "linear-gradient(135deg,#10b981,#059669)" },
+            { label: "Active", value: users.filter(u => u.status === "active").length, grad: "linear-gradient(135deg,#0ea5e9,#0284c7)" },
           ].map(s => (
             <div key={s.label} className="rounded-xl p-4 shadow-sm" style={cs}>
               <p className="text-xs font-medium mb-1" style={tm}>{s.label}</p>
@@ -712,11 +744,10 @@ export default function RolePermissionPage() {
                           {/* Actions */}
                           <td className="px-5 py-3.5">
                             <div className="flex items-center gap-2">
+                              {/* View button: hover handlers removed — background stays static */}
                               <button onClick={() => setViewUser(user)}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
-                                style={{ border: "1px solid var(--border-color)", color: "var(--text-primary)", background: "var(--bg-secondary)" }}
-                                onMouseEnter={e => e.currentTarget.style.background = dark ? "rgba(255,255,255,0.06)" : "#f9fafb"}
-                                onMouseLeave={e => e.currentTarget.style.background = "var(--bg-secondary)"}>
+                                style={{ border: "1px solid var(--border-color)", color: "var(--text-primary)", background: "var(--bg-secondary)" }}>
                                 <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -779,6 +810,7 @@ export default function RolePermissionPage() {
                         <span className="font-semibold" style={{ color: "#f97316" }}>{permCount}</span> permissions
                       </p>
                       <div className="flex items-center gap-2">
+                        {/* View button: hover handlers removed here too, for consistency */}
                         <button onClick={() => setViewUser(user)}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
                           style={{ border: "1px solid var(--border-color)", color: "var(--text-primary)", background: "var(--bg-secondary)" }}>
@@ -822,11 +854,11 @@ export default function RolePermissionPage() {
                     .map((p, i) => p === "…"
                       ? <span key={`e${i}`} className="px-2" style={tm}>…</span>
                       : <button key={p} onClick={() => setPage(p)}
-                          className="min-w-[2rem] px-2 py-1.5 text-xs rounded-lg transition-colors"
-                          style={page === p
-                            ? { background: "#f97316", border: "1px solid #f97316", color: "#fff", fontWeight: 600 }
-                            : { border: "1px solid var(--border-color)", color: "var(--text-secondary)" }
-                          }>{p}</button>
+                        className="min-w-[2rem] px-2 py-1.5 text-xs rounded-lg transition-colors"
+                        style={page === p
+                          ? { background: "#f97316", border: "1px solid #f97316", color: "#fff", fontWeight: 600 }
+                          : { border: "1px solid var(--border-color)", color: "var(--text-secondary)" }
+                        }>{p}</button>
                     )
                   }
                   {[["›", () => setPage(p => Math.min(totalPages, p + 1))], ["»", () => setPage(totalPages)]].map(([l, a]) => (
