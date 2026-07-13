@@ -306,8 +306,7 @@ export function AddMemberModal({ group, nonMembers, onClose, onAdd, loading }) {
               <div
                 key={u.id}
                 onClick={() => setSelected(isSelected ? null : u)}
-                className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors
-                  ${isSelected ? "bg-orange-50" : "hover:bg-gray-50"}`}
+               className="flex items-center gap-3 px-4 py-3 cursor-pointer"
               >
                 <Avatar name={name} photo={u.profile_photo} size={9} />
                 <div className="flex-1 min-w-0">

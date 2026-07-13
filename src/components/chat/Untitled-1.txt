@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   WifiOff, CheckCheck, Check,
   FileText, Download, Eye, Pencil, Trash2, X,
@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { getCurrentUserId } from "@/src/lib/auth";
-import { ReactionBar, ReactionDisplay, EmojiPickerPanel } from "./EmojiPicker";
+import { ReactionBar, ReactionDisplay } from "./EmojiPicker";
 import MentionText from "./MentionText";
 import { ReplyPreview } from "./ReplyPreview";
 
@@ -657,76 +657,6 @@ function AttItem({ att, isMine, onImageOpen, onDeleteAtt }) {
   return <FileAtt att={att} isMine={isMine} />;
 }
 
-// ─── Positioned Emoji Picker (viewport-aware) ─────────────────────────────────
-// Anchors the full EmojiPickerPanel to the message row that triggered it
-// (captured as a DOMRect at click-time), then measures its own rendered size
-// and clamps itself on-screen: flips below the row if there isn't enough
-// room above, and stays within the left/right edges of the viewport.
-// Renders via `position: fixed` so it's independent of any scrollable
-// ancestor's overflow/clipping and of the row's on-page position.
-function PositionedEmojiPicker({ anchorRect, isMine, onSelect, onClose }) {
-  const panelRef = useRef(null);
-  const [style, setStyle] = useState({ opacity: 0, pointerEvents: "none" });
-
-  useLayoutEffect(() => {
-    if (!anchorRect || !panelRef.current) return;
-
-    const PADDING = 8;
-    const panelRect = panelRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    // Prefer opening ABOVE the message row; flip below if not enough room.
-    let top = anchorRect.top - panelRect.height - PADDING;
-    if (top < PADDING) {
-      const below = anchorRect.bottom + PADDING;
-      top = below + panelRect.height <= vh - PADDING
-        ? below
-        : Math.max(PADDING, vh - panelRect.height - PADDING);
-    }
-
-    // Align to the same side as the message bubble, then clamp horizontally
-    // so the panel never runs off the left or right edge of the window.
-    let left = isMine ? anchorRect.right - panelRect.width : anchorRect.left;
-    left = Math.min(Math.max(left, PADDING), vw - panelRect.width - PADDING);
-
-    setStyle({
-      position: "fixed",
-      top,
-      left,
-      opacity: 1,
-      pointerEvents: "auto",
-      transition: "opacity 0.12s ease-out",
-    });
-  }, [anchorRect, isMine]);
-
-  // The anchor rect goes stale the instant the page scrolls or resizes, so
-  // just close the panel rather than track it live (matches how the quick
-  // ReactionBar behaves — it also disappears once you scroll the list).
-useEffect(() => {
-  if (!anchorRect) return;
-  const close = (e) => {
-    // Ignore scrolls happening inside the picker itself (e.g. the emoji grid)
-    if (panelRef.current && e.target && panelRef.current.contains(e.target)) return;
-    onClose?.();
-  };
-  window.addEventListener("scroll", close, true);
-  window.addEventListener("resize", close);
-  return () => {
-    window.removeEventListener("scroll", close, true);
-    window.removeEventListener("resize", close);
-  };
-}, [anchorRect, onClose]);
-
-  if (!anchorRect) return null;
-
-  return (
-    <div ref={panelRef} className="z-[200]" style={style}>
-      <EmojiPickerPanel onSelect={onSelect} onClose={onClose} />
-    </div>
-  );
-}
-
 // ─── MessageBubble ────────────────────────────────────────────────────────────
 export function MessageBubble({
   message: m,
@@ -748,13 +678,6 @@ export function MessageBubble({
   const [showMenu, setShowMenu]               = useState(false);
   const [menuPos, setMenuPos]                 = useState({ x: 0, y: 0 });
   const [showReactionBar, setShowReactionBar] = useState(false);
-  // Full emoji grid opened from the reaction bar's "more" button.
-  // emojiAnchor stores the message row's bounding rect at open-time so
-  // PositionedEmojiPicker can place itself in viewport coordinates and
-  // clamp on-screen instead of floating at a fixed offset.
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [emojiAnchor, setEmojiAnchor]         = useState(null);
-  const rowRef = useRef(null);
 
   const time       = formatTime(m.created_at);
   const senderName = m.sender?.first_name
@@ -835,22 +758,8 @@ export function MessageBubble({
           onStar={() => {}}
         />    )}
 
-      {/* Full emoji grid — rendered outside the row via viewport-fixed
-          positioning so it can never be clipped by a scrollable ancestor
-          and always stays fully on-screen regardless of where this
-          message sits in the list. */}
-      {showEmojiPicker && !isDeleted && !editing && (
-        <PositionedEmojiPicker
-          anchorRect={emojiAnchor}
-          isMine={isMine}
-          onSelect={(emoji) => { onReact?.(m.id, emoji); setShowEmojiPicker(false); }}
-          onClose={() => setShowEmojiPicker(false)}
-        />
-      )}
-
       {/* Message row */}
       <div
-        ref={rowRef}
         className={`flex items-end gap-2 group relative
           ${isMine ? "justify-end" : "justify-start"}
           ${isMentioned
@@ -882,14 +791,7 @@ export function MessageBubble({
                 messageId={m.id}
                 isMine={isMine}
                 onReact={(msgId, emoji) => { onReact?.(msgId, emoji); setShowReactionBar(false); }}
-                onMoreReactions={() => {
-                  // Capture the row's current on-screen position so the
-                  // panel can anchor to it, then hand off to the fixed-
-                  // position picker rendered above.
-                  setEmojiAnchor(rowRef.current?.getBoundingClientRect() ?? null);
-                  setShowEmojiPicker(true);
-                  setShowReactionBar(false);
-                }}
+                onMoreReactions={() => setShowReactionBar(false)}
               />
             )}
 
