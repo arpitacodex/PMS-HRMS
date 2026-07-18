@@ -14,26 +14,26 @@ const API_AUTH = "http://localhost:8080/api/auth";
 const getToken = () => (typeof window !== "undefined" ? localStorage.getItem("token") : "");
 
 const MONTHS = [
-  { value: 1,  label: "January"   },
-  { value: 2,  label: "February"  },
-  { value: 3,  label: "March"     },
-  { value: 4,  label: "April"     },
-  { value: 5,  label: "May"       },
-  { value: 6,  label: "June"      },
-  { value: 7,  label: "July"      },
-  { value: 8,  label: "August"    },
-  { value: 9,  label: "September" },
-  { value: 10, label: "October"   },
-  { value: 11, label: "November"  },
-  { value: 12, label: "December"  },
+  { value: 1, label: "January" },
+  { value: 2, label: "February" },
+  { value: 3, label: "March" },
+  { value: 4, label: "April" },
+  { value: 5, label: "May" },
+  { value: 6, label: "June" },
+  { value: 7, label: "July" },
+  { value: 8, label: "August" },
+  { value: 9, label: "September" },
+  { value: 10, label: "October" },
+  { value: 11, label: "November" },
+  { value: 12, label: "December" },
 ];
 
 const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 6 }, (_, i) => currentYear - 1 + i); // 2025..2030
 
 // ── helpers ───────────────────────────────────────────────────────────────────
-const monthName  = (m) => MONTHS.find(x => x.value === +m)?.label ?? m;
-const fmtAmount  = (a) => ` ${parseFloat(a).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+const monthName = (m) => MONTHS.find(x => x.value === +m)?.label ?? m;
+const fmtAmount = (a) => ` ${parseFloat(a).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
 function Toast({ message, type, onClose }) {
@@ -82,12 +82,12 @@ function Drawer({ mode, record, employees, components, onClose, onSaved, showToa
   const isEdit = mode === "edit";
 
   const [form, setForm] = useState({
-    user_id:      record?.user?.id      ?? record?.user_id      ?? "",
+    user_id: record?.user?.id ?? record?.user_id ?? "",
     component_id: record?.component?.id ?? record?.component_id ?? "",
-    amount:       record?.amount        ?? "",
-    month:        record?.month         ?? new Date().getMonth() + 1,
-    year:         record?.year          ?? currentYear,
-    remarks:      record?.remarks       ?? "",
+    amount: record?.amount ?? "",
+    month: record?.month ?? new Date().getMonth() + 1,
+    year: record?.year ?? currentYear,
+    remarks: record?.remarks ?? "",
   });
   const [saving, setSaving] = useState(false);
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -100,11 +100,11 @@ function Drawer({ mode, record, employees, components, onClose, onSaved, showToa
         ? `${API_BASE}/variable-inputs/update/${record.id}`
         : `${API_BASE}/variable-inputs/add`;
       const method = isEdit ? "PUT" : "POST";
-      const body   = isEdit
+      const body = isEdit
         ? { amount: +form.amount, month: +form.month, year: +form.year, remarks: form.remarks }
         : { user_id: +form.user_id, component_id: +form.component_id, amount: +form.amount, month: +form.month, year: +form.year, remarks: form.remarks };
 
-      const res  = await fetch(url, {
+      const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),
@@ -140,8 +140,8 @@ function Drawer({ mode, record, employees, components, onClose, onSaved, showToa
               {isView
                 ? <Eye size={17} className="text-blue-500" />
                 : isEdit
-                ? <Pencil size={17} className="text-amber-500" />
-                : <Plus size={17} className="text-orange-500" />}
+                  ? <Pencil size={17} className="text-amber-500" />
+                  : <Plus size={17} className="text-orange-500" />}
             </div>
             <div>
               <p className="font-bold text-gray-800 text-base leading-tight">
@@ -274,17 +274,17 @@ function Drawer({ mode, record, employees, components, onClose, onSaved, showToa
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function VariableInputsPage() {
-  const [records,    setRecords]    = useState([]);
-  const [employees,  setEmployees]  = useState([]);
+  const [records, setRecords] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [components, setComponents] = useState([]);
-  const [loading,    setLoading]    = useState(true);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [search,     setSearch]     = useState("");
+  const [search, setSearch] = useState("");
   const [filterMonth, setFilterMonth] = useState("");
-  const [filterYear,  setFilterYear]  = useState("");
-  const [drawer,     setDrawer]     = useState(null); // { mode, record }
-  const [confirm,    setConfirm]    = useState(null); // record
-  const [toast,      setToast]      = useState(null);
+  const [filterYear, setFilterYear] = useState("");
+  const [drawer, setDrawer] = useState(null); // { mode, record }
+  const [confirm, setConfirm] = useState(null); // record
+  const [toast, setToast] = useState(null);
 
   const showToast = (message, type) => setToast({ message, type });
 
@@ -292,15 +292,15 @@ export default function VariableInputsPage() {
     if (!silent) setLoading(true); else setRefreshing(true);
     try {
       const token = getToken();
-      const h     = { Authorization: `Bearer ${token}` };
+      const h = { Authorization: `Bearer ${token}` };
       const [recRes, empRes, compRes] = await Promise.all([
         fetch(`${API_BASE}/variable-inputs`, { headers: h }),
         fetch(`${API_AUTH}/all`, { headers: h }),
         fetch(`${API_BASE}/salary-components`, { headers: h }),
       ]);
       const [rec, emp, comp] = await Promise.all([recRes.json(), empRes.json(), compRes.json()]);
-      if (rec.success)  setRecords(rec.data ?? []);
-      if (emp.success)  setEmployees(emp.users ?? emp.data ?? []);
+      if (rec.success) setRecords(rec.data ?? []);
+      if (emp.success) setEmployees(emp.users ?? emp.data ?? []);
       if (comp.success) setComponents((comp.data ?? []).filter(c => c.calculation_type === "variable"));
     } catch {
       showToast("Failed to load data", "error");
@@ -315,7 +315,7 @@ export default function VariableInputsPage() {
   const handleDelete = async () => {
     try {
       const token = getToken();
-      const res   = await fetch(`${API_BASE}/variable-inputs/delete/${confirm.id}`, {
+      const res = await fetch(`${API_BASE}/variable-inputs/delete/${confirm.id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -334,17 +334,17 @@ export default function VariableInputsPage() {
   const filtered = records.filter(r => {
     const name = `${r.user?.first_name} ${r.user?.last_name}`.toLowerCase();
     const comp = (r.component?.component_name ?? "").toLowerCase();
-    const q    = search.toLowerCase();
+    const q = search.toLowerCase();
     const matchSearch = !q || name.includes(q) || comp.includes(q);
-    const matchMonth  = !filterMonth || +r.month === +filterMonth;
-    const matchYear   = !filterYear  || +r.year  === +filterYear;
+    const matchMonth = !filterMonth || +r.month === +filterMonth;
+    const matchYear = !filterYear || +r.year === +filterYear;
     return matchSearch && matchMonth && matchYear;
   });
 
   // ── Summary stats ──────────────────────────────────────────────────────────
   const totalAmount = records.reduce((s, r) => s + parseFloat(r.amount || 0), 0);
-  const uniqueEmps  = new Set(records.map(r => r.user_id)).size;
-  const thisMonth   = records.filter(r => r.month === new Date().getMonth() + 1 && r.year === currentYear).length;
+  const uniqueEmps = new Set(records.map(r => r.user_id)).size;
+  const thisMonth = records.filter(r => r.month === new Date().getMonth() + 1 && r.year === currentYear).length;
 
   return (
     <div className="min-h-screen bg-[#f8f9fb] p-4 md:p-6">
@@ -385,10 +385,10 @@ export default function VariableInputsPage() {
       {/* ── Stats Cards ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { label: "Total Records",    value: records.length,                          icon: LayoutGrid,       color: "text-orange-500",  bg: "bg-orange-50"  },
-          { label: "Total Amount",     value: `${(totalAmount/1000).toFixed(1)}k`,    icon: DollarSign,       color: "text-emerald-500", bg: "bg-emerald-50" },
-          { label: "Employees",        value: uniqueEmps,                              icon: User,             color: "text-blue-500",    bg: "bg-blue-50"    },
-          { label: "This Month",       value: thisMonth,                               icon: Calendar,         color: "text-purple-500",  bg: "bg-purple-50"  },
+          { label: "Total Records", value: records.length, icon: LayoutGrid, color: "text-orange-500", bg: "bg-orange-50" },
+          { label: "Total Amount", value: `${(totalAmount / 1000).toFixed(1)}k`, icon: DollarSign, color: "text-emerald-500", bg: "bg-emerald-50" },
+          { label: "Employees", value: uniqueEmps, icon: User, color: "text-blue-500", bg: "bg-blue-50" },
+          { label: "This Month", value: thisMonth, icon: Calendar, color: "text-purple-500", bg: "bg-purple-50" },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
             <div className="flex items-center justify-between mb-3">
@@ -469,11 +469,12 @@ export default function VariableInputsPage() {
                             {(r.user?.first_name?.[0] ?? "?")}{(r.user?.last_name?.[0] ?? "")}
                           </span>
                         </div>
-                   <span className="text-sm font-semibold text-black dark:text-white">
-  {r.user
-    ? `${r.user.first_name} ${r.user.last_name}`
-    : `User #${r.user_id}`}
-</span>
+                        <span className="text-sm font-semibold text-gray-800">
+                          {r.user
+                            ? `${r.user.first_name} ${r.user.last_name}`
+                            : `User #${r.user_id}`}
+                        </span>
+
                       </div>
                     </td>
                     <td className="px-5 py-4">
