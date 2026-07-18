@@ -5,7 +5,7 @@ import {
   RefreshCw, Search, X, Eye, Pencil, Trash2,
   DollarSign, Percent, AlertCircle, Loader2,
   CheckCircle2, ChevronDown, Filter, Users,
-  CalendarRange, Info, ArrowUpRight, Save,
+  CalendarRange, Info, ArrowUpRight, Save, Plus,
 } from "lucide-react";
 
 const API_BASE = "http://localhost:8080/api";
@@ -66,7 +66,7 @@ function DeleteModal({ open, onClose, onConfirm, loading }) {
   );
 }
 
-/* ─── Drawer (Edit) ──────────────────────────────────────────────────────── */
+/* ─── Drawer (Edit / Create) ─────────────────────────────────────────────── */
 function Drawer({ open, onClose, title, children }) {
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -117,6 +117,21 @@ function Input({ className = "", ...props }) {
         focus:ring-2 focus:ring-[#ff8c42]/30 focus:border-[#ff8c42] placeholder-gray-400 ${className}`}
       {...props}
     />
+  );
+}
+
+function Select({ className = "", children, ...props }) {
+  return (
+    <div className="relative">
+      <select
+        className={`w-full appearance-none px-3 py-2.5 text-sm border border-gray-200 rounded-lg outline-none
+          focus:ring-2 focus:ring-[#ff8c42]/30 focus:border-[#ff8c42] bg-white pr-9 ${className}`}
+        {...props}
+      >
+        {children}
+      </select>
+      <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+    </div>
   );
 }
 
@@ -312,7 +327,8 @@ export default function AllSalaryStructures() {
   const [loading,    setLoading]      = useState(true);
   const [search,     setSearch]       = useState("");
   const [typeFilter, setTypeFilter]   = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  // Default to "active" so the table shows only active records unless the user changes the filter.
+  const [statusFilter, setStatusFilter] = useState("active");
   const [toast,      setToast]        = useState(null);
   const [viewTarget, setViewTarget]   = useState(null);
   const [editTarget, setEditTarget]   = useState(null);
@@ -321,6 +337,21 @@ export default function AllSalaryStructures() {
   const [editLoading, setEditLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [components, setComponents]   = useState([]);
+
+  // Users (for the "assign to" dropdown when creating a structure)
+  const [users, setUsers]             = useState([]);
+
+  // Create drawer state
+  const [showCreate, setShowCreate]   = useState(false);
+  const [createForm, setCreateForm]   = useState({
+    user_id: "",
+    component_id: "",
+    amount: "",
+    percentage: "",
+    percentage_of_component_id: "",
+    effective_from: "",
+  });
+  const [createLoading, setCreateLoading] = useState(false);
 
   const headers = {
     "Content-Type": "application/json",
@@ -351,9 +382,20 @@ export default function AllSalaryStructures() {
     } catch { /* silent */ }
   }, []);
 
+  // Fetch all users so we can show "Name (#id)" in the create form's employee dropdown.
+  const fetchUsers = useCallback(async () => {
+    try {
+      const r = await fetch(`${API_BASE}/auth/all`, { headers });
+      const d = await r.json();
+      const list = d?.data?.users || d?.users || (Array.isArray(d?.data) ? d.data : []);
+      setUsers(Array.isArray(list) ? list : []);
+    } catch { /* silent */ }
+  }, []);
+
   useEffect(() => {
     fetchAll();
     fetchComponents();
+    fetchUsers();
   }, []);
 
   /* Filter */
@@ -367,7 +409,7 @@ export default function AllSalaryStructures() {
     return matchSearch && matchType && matchStatus;
   });
 
-  /* Stats */
+  /* Stats (always reflect the full dataset, not the current filter) */
   const stats = {
     total:    structures.length,
     active:   structures.filter(s => s.is_active).length,
@@ -440,6 +482,63 @@ export default function AllSalaryStructures() {
     }
   };
 
+  /* ─── Create ────────────────────────────────────────────────────────── */
+  const openCreate = () => {
+    setCreateForm({
+      user_id: "",
+      component_id: "",
+      amount: "",
+      percentage: "",
+      percentage_of_component_id: "",
+      effective_from: "",
+    });
+    setShowCreate(true);
+  };
+
+  const selectedCreateComponent = components.find(
+    (c) => String(c.id) === String(createForm.component_id)
+  );
+  const createCalcType = selectedCreateComponent?.calculation_type || "";
+
+  const createFormValid =
+    createForm.user_id &&
+    createForm.component_id &&
+    createForm.effective_from &&
+    (createCalcType !== "fixed" || createForm.amount) &&
+    (createCalcType !== "percentage" || (createForm.percentage && createForm.percentage_of_component_id));
+
+  const handleCreateSubmit = async () => {
+    if (!createFormValid) return;
+    setCreateLoading(true);
+    try {
+      const body = {
+        user_id: Number(createForm.user_id),
+        component_id: Number(createForm.component_id),
+        effective_from: createForm.effective_from,
+        ...(createCalcType === "fixed"      ? { amount: Number(createForm.amount) } : {}),
+        ...(createCalcType === "percentage" ? {
+          percentage: Number(createForm.percentage),
+          percentage_of_component_id: Number(createForm.percentage_of_component_id),
+        } : {}),
+      };
+      const r = await fetch(`${API_BASE}/salary-structures/create`, {
+        method: "POST", headers, body: JSON.stringify(body),
+      });
+      const d = await r.json();
+      if (d.success) {
+        showToast("Salary structure created successfully");
+        setShowCreate(false);
+        fetchAll();
+      } else {
+        showToast(d.message || "Create failed", "error");
+      }
+    } catch {
+      showToast("Network error", "error");
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   if (!isAdminHRorPM()) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -470,6 +569,113 @@ export default function AllSalaryStructures() {
           onDelete={setDeleteTarget}
         />
       )}
+
+      {/* Create Drawer */}
+      <Drawer
+        open={showCreate}
+        onClose={() => setShowCreate(false)}
+        title="Create Salary Structure"
+      >
+        <div>
+          <Field label="Employee" required>
+            <Select
+              value={createForm.user_id}
+              onChange={(e) => setCreateForm(f => ({ ...f, user_id: e.target.value }))}
+            >
+              <option value="">Select employee...</option>
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.first_name} {u.last_name} (#{u.id})
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          <Field label="Salary Component" required>
+            <Select
+              value={createForm.component_id}
+              onChange={(e) => setCreateForm(f => ({
+                ...f,
+                component_id: e.target.value,
+                amount: "",
+                percentage: "",
+                percentage_of_component_id: "",
+              }))}
+            >
+              <option value="">Select component...</option>
+              {components.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.component_name} ({c.calculation_type})
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          {createCalcType === "fixed" && (
+            <Field label="Amount (₹)" required>
+              <Input
+                type="number"
+                min="0"
+                value={createForm.amount}
+                onChange={(e) => setCreateForm(f => ({ ...f, amount: e.target.value }))}
+                placeholder="e.g. 30000"
+              />
+            </Field>
+          )}
+
+          {createCalcType === "percentage" && (
+            <>
+              <Field label="Percentage (%)" required>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={createForm.percentage}
+                  onChange={(e) => setCreateForm(f => ({ ...f, percentage: e.target.value }))}
+                  placeholder="e.g. 12"
+                />
+              </Field>
+              <Field label="Based On Component" required>
+                <Select
+                  value={createForm.percentage_of_component_id}
+                  onChange={(e) => setCreateForm(f => ({ ...f, percentage_of_component_id: e.target.value }))}
+                >
+                  <option value="">Select base component...</option>
+                  {components
+                    .filter((c) => String(c.id) !== String(createForm.component_id))
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>{c.component_name}</option>
+                    ))}
+                </Select>
+              </Field>
+            </>
+          )}
+
+          <Field label="Effective From" required>
+            <div className="relative">
+              <Input
+                type="date"
+                value={createForm.effective_from}
+                onChange={(e) => setCreateForm(f => ({ ...f, effective_from: e.target.value }))}
+              />
+              <CalendarRange size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+          </Field>
+
+          <div className="flex gap-3 pt-4">
+            <button onClick={() => setShowCreate(false)}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+              Cancel
+            </button>
+            <button onClick={handleCreateSubmit} disabled={createLoading || !createFormValid}
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#ff8c42] text-white text-sm font-semibold hover:bg-[#e57a35] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+              {createLoading && <Loader2 size={14} className="animate-spin" />}
+              <Save size={14} />
+              Create
+            </button>
+          </div>
+        </div>
+      </Drawer>
 
       {/* Edit Drawer */}
       <Drawer
@@ -519,18 +725,15 @@ export default function AllSalaryStructures() {
                   />
                 </Field>
                 <Field label="Based On Component" required>
-                  <div className="relative">
-                    <select
-                      value={editForm.percentage_of_component_id}
-                      onChange={(e) => setEditForm(f => ({ ...f, percentage_of_component_id: e.target.value }))}
-                      className="w-full appearance-none px-3 py-2.5 text-sm border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#ff8c42]/30 focus:border-[#ff8c42] bg-white pr-9">
-                      <option value="">Select base component...</option>
-                      {components.filter(c => String(c.id) !== String(editTarget.component_id)).map(c => (
-                        <option key={c.id} value={c.id}>{c.component_name}</option>
-                      ))}
-                    </select>
-                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
+                  <Select
+                    value={editForm.percentage_of_component_id}
+                    onChange={(e) => setEditForm(f => ({ ...f, percentage_of_component_id: e.target.value }))}
+                  >
+                    <option value="">Select base component...</option>
+                    {components.filter(c => String(c.id) !== String(editTarget.component_id)).map(c => (
+                      <option key={c.id} value={c.id}>{c.component_name}</option>
+                    ))}
+                  </Select>
                 </Field>
               </>
             )}
@@ -574,12 +777,20 @@ export default function AllSalaryStructures() {
               <p className="text-sm text-gray-400">View and manage all assigned salary structures</p>
             </div>
           </div>
-          <button
-            onClick={fetchAll}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
-            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
-            Refresh
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={fetchAll}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+              Refresh
+            </button>
+            <button
+              onClick={openCreate}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#ff8c42] text-white text-sm font-semibold hover:bg-[#e57a35] transition-all shadow-sm">
+              <Plus size={14} />
+              Create Salary Structure
+            </button>
+          </div>
         </div>
       </div>
 
@@ -631,14 +842,15 @@ export default function AllSalaryStructures() {
                 </select>
                 <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
+              {/* Status filter — defaults to "Active"; user can switch to Inactive or All */}
               <div className="relative">
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="appearance-none pl-3 pr-8 py-2.5 text-sm  text-black border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#ff8c42]/30 focus:border-[#ff8c42] bg-white">
-                  <option value="all">All Status</option>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
+                  <option value="all">All Status</option>
                 </select>
                 <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
@@ -819,10 +1031,10 @@ export default function AllSalaryStructures() {
               {/* Footer count */}
               <div className="px-5 py-3.5 border-t border-gray-50 flex items-center justify-between text-xs text-gray-400">
                 <span>Showing {filtered.length} of {structures.length} structures</span>
-                {filtered.length !== structures.length && (
-                  <button onClick={() => { setSearch(""); setTypeFilter("all"); setStatusFilter("all"); }}
+                {(search || typeFilter !== "all" || statusFilter !== "active") && (
+                  <button onClick={() => { setSearch(""); setTypeFilter("all"); setStatusFilter("active"); }}
                     className="text-[#ff8c42] hover:underline font-medium">
-                    Clear filters
+                    Reset filters
                   </button>
                 )}
               </div>
